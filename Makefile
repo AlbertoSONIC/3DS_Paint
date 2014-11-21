@@ -37,8 +37,8 @@ APP_AUTHOR      := AlbertoSONIC
 #---------------------------------------------------------------------------------
 ARCH	:=	-march=armv6k -mtune=mpcore
 
-CFLAGS	:=	-g -Wall -O2 -mword-relocations -save-temps \
-			-fomit-frame-pointer -ffast-math -mfloat-abi=softfp \
+CFLAGS	:=	-g -Wall -O2 -mword-relocations \
+			-fomit-frame-pointer -ffast-math \
 			$(ARCH)
 
 CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
@@ -46,8 +46,7 @@ CFLAGS	+=	$(INCLUDE) -DARM11 -D_3DS
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions -std=gnu++11
 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) \
-			-Wl,-Map,$(TARGET).map
+LDFLAGS	=	-specs=3dsx.specs -g $(ARCH) -Wl,-Map,$(TARGET).map
 
 LIBS	:= -lctru -lm
 
@@ -101,6 +100,19 @@ export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 
+ifeq ($(strip $(ICON)),)
+	icons := $(wildcard *.png)
+	ifneq (,$(findstring $(TARGET).png,$(icons)))
+		export APP_ICON := $(TOPDIR)/$(TARGET).png
+	else
+		ifneq (,$(findstring icon.png,$(icons)))
+			export APP_ICON := $(TOPDIR)/icon.png
+		endif
+	endif
+else
+	export APP_ICON := $(TOPDIR)/$(ICON)
+endif
+
 .PHONY: $(BUILD) clean all
  
 #---------------------------------------------------------------------------------
@@ -113,7 +125,7 @@ $(BUILD):
 #---------------------------------------------------------------------------------
 clean:
 	@echo clean ...
-	@rm -fr $(BUILD) $(TARGET).3dsx $(TARGET).elf
+	@rm -fr $(BUILD) $(TARGET).3dsx $(OUTPUT).smdh $(TARGET).elf
  
  
 #---------------------------------------------------------------------------------
@@ -124,6 +136,10 @@ DEPENDS	:=	$(OFILES:.o=.d)
 #---------------------------------------------------------------------------------
 # main targets
 #---------------------------------------------------------------------------------
+ifeq ($(strip $(NO_SMDH)),)
+.PHONY: all
+all	:	$(OUTPUT).3dsx $(OUTPUT).smdh
+endif
 $(OUTPUT).3dsx	:	$(OUTPUT).elf
 $(OUTPUT).elf	:	$(OFILES)
 
