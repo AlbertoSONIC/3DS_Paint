@@ -14,7 +14,7 @@ int state = 0;
 
 //rev1-2= program revision
 int rev1 = 1;
-int rev2 = 0;
+int rev2 = 2;
 
 //Pen color
 
