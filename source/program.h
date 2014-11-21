@@ -9,6 +9,7 @@ void printBottomIcon();
 void printDrawing();
 void renderDrawing();
 void printTop();
+void printWarning();
 
 void screenRender();
 void screenRefresh();

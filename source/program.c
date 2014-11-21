@@ -36,6 +36,9 @@ int posxy[320][240];
 int x = 0;
 int y = 0;
 
+//warn becames 1 if the warning prompt is showing up, 2 if it is waiting for a Yes or a No, 0 if it isn't on the screen
+int warn = 0;
+
 //Input
 u32 input;
 
@@ -47,7 +50,8 @@ u8* screenTopRight = 0;
 //Variable reset
 void variableReset()
 {
-	color = 1;
+	warn = 0;
+	color = 0;
 	for (y = 34; y < 240; y++)
 	{
 		for (x = 0; x < 320; x++)
@@ -75,7 +79,7 @@ void program()
 
 
 	//If first boot or time to reset
-	if (state == 0 || input & KEY_UP)
+	if (state == 0)
 	{
 
 		clearBottom();
@@ -93,7 +97,7 @@ void program()
 		state = 2;
 	}
 
-	if ((posX >= 1 && posX <= 320) && (posY >= 34 && posY <= 240))
+	if ((posX >= 1 && posX <= 320) && (posY >= 34 && posY <= 240) && warn==0)
 	{
 
 		//Plus like dot
@@ -118,18 +122,19 @@ void program()
 
 		state = 1;
 	}
-	//If touch input (x;y) != 0 && color == 0 you put a "0" at posx[touchx, touchy], else put a 1, 2 or 3 (depends on which color are you using). In every situation, you have to set state to 1
+	
+
 	
 
 	//Press DOWN to go home!!!!!!
-	if (input & KEY_DOWN)
+	if (input & KEY_DOWN && warn == 0)
 	{
 		aptReturnToMenu();
 		renderBottomUi();
 	}
 
 	//Changes color/Eraser)
-	if (input & KEY_LEFT)
+	if (input & KEY_LEFT && warn == 0)
 	{
 		if (color > 0)
 		{
@@ -138,7 +143,7 @@ void program()
 		}
 	}
 
-	if (input & KEY_RIGHT)
+	if (input & KEY_RIGHT && warn == 0)
 	{
 		if (color < 7)
 		{
@@ -147,12 +152,57 @@ void program()
 
 		}
 	}
+	
 
 	//If active print drawing
-	if (state==1)
+	if (state == 1 && warn == 0)
 	{
 		renderDrawing();
 		state = 2;
+	}
+
+
+	//Warning box!!!!
+
+	//Press UP to show it up!
+	if (input & KEY_UP && warn == 0)
+	{
+		warn = 1;
+	}
+
+	//Renders warning box
+	if (warn == 1)
+	{
+		printWarning();
+		screenRender();
+		printWarning();
+		screenRender();
+		warn = 2;
+	}
+
+	//If you tap yes, then it sets state to 0
+	if ((posX >= 50 && posX <= 141) && (posY >= 151 && posY <= 179) && warn == 2)
+	{
+
+		state = 0;
+	}
+
+	//If you tap No
+	if ((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179) && warn == 2)
+	{
+		renderBottomUi();
+		warn = 0;
+	}
+
+	//Yes/No using A/B
+	if (input & KEY_A && warn == 2)
+	{
+		state = 0;
+	}
+	if (input & KEY_B && warn == 2)
+	{
+		renderBottomUi();
+		warn = 0;
 	}
 
 }
@@ -285,6 +335,35 @@ void renderDrawing()
 	screenRender();
 	printDrawing();
 	screenRender();
+}
+
+void printWarning()
+{
+	//Prints a dark grey rectangle!
+	drawFillRect(36, 60, 272, 85, 128, 128, 128, screenBottom);
+
+	//Prints a light grey rectangle!
+	drawFillRect(36, 85, 272, 189, 160, 160, 160, screenBottom);
+
+	//Prints the buttons!
+	drawFillRect(50, 151, 141, 179, 192, 192, 192, screenBottom);
+	drawFillRect(166, 151, 257, 179, 192, 192, 192, screenBottom);
+
+	//Prints the text!
+	char buffer[100];
+
+	sprintf(buffer, "WARNING!");
+	drawString(buffer, 124, 71, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+	sprintf(buffer, "Are you sure that you");
+	drawString(buffer, 48, 102, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+	sprintf(buffer, "want to clear everything?");
+	drawString(buffer, 48, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+	sprintf(buffer, "Yes (A)        No (B)");
+	drawString(buffer, 66, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
 }
 
 
