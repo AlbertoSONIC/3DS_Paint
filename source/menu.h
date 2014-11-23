@@ -1,7 +1,13 @@
-#ifndef PROGRAM_H
-#define PROGRAM_H
+#ifndef MENU_H
+#define MENU_H
 
-void program();
+void menu();
+void printAbout();
+void printBottomMenu();
+void printSettings();
+void printTopMenu();
+
+void paint();
 void variableReset();
 void renderBottomUi();
 void printBottomBackgnd();
@@ -15,6 +21,8 @@ void screenRender();
 void screenRefresh();
 void clearBottom();
 void clearTop();
+
+extern int mode;
 
 
 #endif

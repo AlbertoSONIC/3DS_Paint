@@ -1,7 +1,9 @@
 #include "main.h"
-#include "program.h"
+#include "menu.h"
 /* New ctrulib */
 #include <3ds.h>
+
+
 int main()
 {
 	//Grab the status of the app (running, suspending, sleeping, exiting)
@@ -23,16 +25,19 @@ int main()
 		if (status == APP_RUNNING)
 		{
 			//If the app is currently in the forground running, execute the program.
-			program();
+			if (mode == 1)
+			{
+				paint();
+			}
+			if (mode == 0)
+			{
+				menu();
+			}
 		}
 		else if (status == APP_SUSPENDING)
 		{
 			//If the app is currently suspended in the background, return to the home menu.
 			aptReturnToMenu();
-			//Refresh
-			renderBottomUi();
-			printTop();
-			screenRender();
 		}
 		else if (status == APP_SLEEPMODE)
 		{
