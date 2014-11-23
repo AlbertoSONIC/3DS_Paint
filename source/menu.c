@@ -9,14 +9,19 @@
 //For sprintF
 #include <stdio.h>
 
+//For time
+#define SECONDS_IN_DAY 86400
+#define SECONDS_IN_HOUR 3600
+#define SECONDS_IN_MINUTE 60
+
 //STATE: 0=start/reset, 2=wait for input, 1=render drawing
 int state = 0;
 
 int mode = 0;
 
 //rev1-2= program revision
-int rev1 = 1;
-int rev2 = 2;
+int rev1 = 2;
+int rev2 = 0;
 
 //Pen color
 
@@ -72,14 +77,18 @@ void menu()
 	//Menu
 	if (mode == 0)
 	{
-		//Rendering the bottom menu ui
+		
+
+		//Rendering the menu ui
 		if (rendered == 0)
 		{
 			printBottomMenu();
 			printTopMenu();
+			printTime();
 			screenRender();
 			printBottomMenu();
 			printTopMenu();
+			printTime();
 			screenRender();
 			rendered = 1;
 		}
@@ -110,6 +119,7 @@ void menu()
 		if ((posX >= 220 && posX <= 303) && (posY >= 6 && posY <= 33))
 		{
 			mode = 3;
+			rendered = 0;
 		}
 	}
 
@@ -126,7 +136,7 @@ void menu()
 			rendered = 1;
 		}
 		//If you tap close
-		if ((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183) || INPUT & KEY_A)
+		if (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)
 		{
 			mode = 0;
 
@@ -147,7 +157,7 @@ void menu()
 			rendered = 1;
 		}
 		//If you tap close
-		if ((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183) || INPUT & KEY_A)
+		if (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)
 		{
 			rendered = 0;
 			mode = 0;
@@ -177,7 +187,7 @@ void printBottomMenu()
 	char buffer[100];
 
 	sprintf(buffer, "About");
-	drawString(buffer, 37, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	drawString(buffer, 30, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 	sprintf(buffer, "Settings");
 	drawString(buffer, 228, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
@@ -227,7 +237,7 @@ void printAbout()
 	sprintf(buffer, "Version: 2.0");
 	drawString(buffer, 41, 122, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "    (A) Close");
+	sprintf(buffer, "      (A) Close");
 	drawString(buffer, 71, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 }
@@ -253,7 +263,7 @@ void printSettings()
 	sprintf(buffer, "Work in Progress... ");
 	drawString(buffer, 51, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "    (A) Close");
+	sprintf(buffer, "      (A) Close");
 	drawString(buffer, 71, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 }
@@ -287,12 +297,11 @@ void printTopMenu()
 		drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopLeft);
 		drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopRight);
 
-		//Blue and red rect
+		//Blue rect
 		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
 		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopRight);
 
-		drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopLeft);
-		drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopRight);
+		
 
 
 		//Text
@@ -318,10 +327,6 @@ void printTopMenu()
 		drawString(buffer, 1, 76, 255, 255, 255, screenTopLeft, GFX_LEFT);
 		drawString(buffer, 1, 76, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                                   Version: %d.%d", rev1, rev2);
-		drawString(buffer, 1, 203, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 203, 255, 255, 255, screenTopRight, GFX_LEFT);
-
 		sprintf(buffer, "   ");
 		drawString(buffer, 3, 218, 255, 255, 255, screenTopLeft, GFX_LEFT);
 		drawString(buffer, 3, 218, 255, 255, 255, screenTopRight, GFX_LEFT);
@@ -338,6 +343,21 @@ void printTopMenu()
 		drawString(buffer, 1, 131, 255, 255, 255, screenTopLeft, GFX_LEFT);
 		drawString(buffer, 1, 131, 255, 255, 255, screenTopRight, GFX_LEFT);
 	
+}
+
+void printTime()
+{
+	char buffer[100];
+	drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopLeft);
+	drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopRight);
+
+	u64 timeInSeconds = osGetTime() / 1000;
+	u64 dayTime = timeInSeconds % SECONDS_IN_DAY;
+	sprintf(buffer, "%llu:%llu:%llu", dayTime / SECONDS_IN_HOUR, (dayTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, dayTime % SECONDS_IN_MINUTE);
+
+	drawString(buffer, 300, 203, 255, 255, 255, screenTopLeft, GFX_LEFT);
+	drawString(buffer, 300, 203, 255, 255, 255, screenTopRight, GFX_LEFT);
+
 }
 
 // ************************************************************************************************************************
@@ -382,11 +402,13 @@ void paint()
 		variableReset();
 		printBottomBackgnd();
 		printTop();
+		printTime();
 		printBottomIcon();
 		screenRender();
 		clearBottom();
 		printBottomBackgnd();
 		printTop();
+		printTime();
 		printBottomIcon();
 		screenRender();
 
@@ -692,12 +714,10 @@ void printTop()
 	drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopLeft);
 	drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopRight);
 
-	//Blue and red rect
+	//Blue rect
 	drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
 	drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopRight);
 
-	drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopLeft);
-	drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopRight);
 
 
 	//Text
@@ -722,10 +742,6 @@ void printTop()
 	sprintf(buffer, "                                 AlbertoSONIC");
 	drawString(buffer, 1, 76, 255, 255, 255, screenTopLeft, GFX_LEFT);
 	drawString(buffer, 1, 76, 255, 255, 255, screenTopRight, GFX_LEFT);
-
-	sprintf(buffer, "                                   Version: %d.%d", rev1, rev2);
-	drawString(buffer, 1, 203, 255, 255, 255, screenTopLeft, GFX_LEFT);
-	drawString(buffer, 1, 203, 255, 255, 255, screenTopRight, GFX_LEFT);
 
 	sprintf(buffer, "   EXIT");
 	drawString(buffer, 3, 218, 255, 255, 255, screenTopLeft, GFX_LEFT);

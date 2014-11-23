@@ -16,6 +16,7 @@ void printDrawing();
 void renderDrawing();
 void printTop();
 void printWarning();
+void printTime();
 
 void screenRender();
 void screenRefresh();

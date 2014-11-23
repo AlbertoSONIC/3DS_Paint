@@ -24,12 +24,13 @@ int main()
 
 		if (status == APP_RUNNING)
 		{
+
 			//If the app is currently in the forground running, execute the program.
 			if (mode == 1)
 			{
 				paint();
 			}
-			if (mode == 0)
+			else
 			{
 				menu();
 			}
