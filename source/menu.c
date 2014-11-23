@@ -126,9 +126,10 @@ void menu()
 			rendered = 1;
 		}
 		//If you tap close
-		if ((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183))
+		if ((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183) || INPUT & KEY_A)
 		{
 			mode = 0;
+
 			rendered = 0;
 		}
 	}
@@ -146,10 +147,11 @@ void menu()
 			rendered = 1;
 		}
 		//If you tap close
-		if ((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183))
+		if ((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183) || INPUT & KEY_A)
 		{
-			mode = 0;
 			rendered = 0;
+			mode = 0;
+		
 		}
 	}
 }
@@ -225,7 +227,7 @@ void printAbout()
 	sprintf(buffer, "Version: 2.0");
 	drawString(buffer, 41, 122, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "        Close");
+	sprintf(buffer, "    (A) Close");
 	drawString(buffer, 71, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 }
@@ -251,7 +253,7 @@ void printSettings()
 	sprintf(buffer, "Work in Progress... ");
 	drawString(buffer, 51, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "        Close");
+	sprintf(buffer, "    (A) Close");
 	drawString(buffer, 71, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 }
@@ -424,6 +426,7 @@ void paint()
 	if (input & KEY_DOWN && warn == 0)
 	{
 		mode = 0;
+		rendered = 0;
 	}
 
 	//Changes color/Eraser)
