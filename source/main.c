@@ -1,62 +1,39 @@
-#include "main.h"
-#include "menu.h"
-/* New ctrulib */
 #include <3ds.h>
-
+#include "menu.h"
 
 int main()
 {
-	//Grab the status of the app (running, suspending, sleeping, exiting)
-	APP_STATUS status;
-
-	//Initialize 3ds services
+	// Initialize services
 	srvInit();
-	fsInit();
 	aptInit();
-	gfxInit();
 	hidInit(NULL);
-	//Setup event handler to listen for changes in status
-	aptSetupEventHandler();
+	gfxInit();
+	//gfxSet3D(true); // uncomment if using stereoscopic 3D
 
-
-	while ((status = aptGetStatus()) != APP_EXITING)
+	// Main loop
+	while (aptMainLoop())
 	{
 
-		if (status == APP_RUNNING)
-		{
+		// Your code goes here
 
-			//If the app is currently in the forground running, execute the program.
-			if (mode == 1)
-			{
-				paint();
-			}
-			else
-			{
-				menu();
-			}
-		}
-		else if (status == APP_SUSPENDING)
+		
+		if (mode == 1)
 		{
-			//If the app is currently suspended in the background, return to the home menu.
-			aptReturnToMenu();
+			paint();
 		}
-		else if (status == APP_SLEEPMODE)
+		else
 		{
-			//If the app is currently suspended in sleep mode, wait.
-			aptWaitStatusEvent();
+			menu();
 		}
 
-		//Wait for GPU
-		gspWaitForVBlank();
 
+            gspWaitForVBlank();
 	}
 
-	//Close all opened services.
-	hidExit();
+	// Exit services
 	gfxExit();
+	hidExit();
 	aptExit();
 	srvExit();
-	//Kill the process.
-	svcExitProcess();
 	return 0;
 }

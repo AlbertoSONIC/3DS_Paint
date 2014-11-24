@@ -41,7 +41,6 @@ Result aptInit();
 void aptExit();
 void aptOpenSession();
 void aptCloseSession();
-void aptSetupEventHandler();
 void aptSetStatus(APP_STATUS status);
 APP_STATUS aptGetStatus();
 u32 aptGetStatusPower();//This can be used when the status is APP_SUSPEND* to check how the return-to-menu was triggered: 0 = home-button, 1 = power-button.
@@ -50,9 +49,11 @@ void aptReturnToMenu();//This should be called by the user application when aptG
 void aptWaitStatusEvent();
 void aptSignalReadyForSleep();
 NS_APPID aptGetMenuAppID();
+bool aptMainLoop(); // Use like this in your main(): while (aptMainLoop()) { your code here... }
 
 Result APT_GetLockHandle(Handle* handle, u16 flags, Handle* lockHandle);
 Result APT_Initialize(Handle* handle, NS_APPID appId, Handle* eventHandle1, Handle* eventHandle2);
+Result APT_HardwareResetAsync(Handle* handle);
 Result APT_Enable(Handle* handle, u32 a);
 Result APT_GetAppletManInfo(Handle* handle, u8 inval, u8 *outval8, u32 *outval32, NS_APPID *menu_appid, NS_APPID *active_appid);
 Result APT_PrepareToJumpToHomeMenu(Handle* handle);
@@ -70,3 +71,9 @@ Result APT_PrepareToCloseApplication(Handle* handle, u8 a);
 Result APT_CloseApplication(Handle* handle, u32 a, u32 b, u32 c);
 Result APT_SetAppCpuTimeLimit(Handle* handle, u32 percent);
 Result APT_GetAppCpuTimeLimit(Handle* handle, u32 *percent);
+Result APT_CheckNew3DS_Application(Handle* handle, u8 *out);//*Application and *System use APT commands 0x01010000 and 0x01020000. Using APT_CheckNew3DS() is recommended, this determines which of those two funcs to use automatically. When this is first called(this calls aptOpenSession/aptCloseSession internally), this initializes an internal flag, which is then used for the out val for all future calls.
+Result APT_CheckNew3DS_System(Handle* handle, u8 *out);
+Result APT_CheckNew3DS(Handle* handle, u8 *out);
+Result APT_PrepareToDoAppJump(Handle* handle, u8 flags, u64 programID, u8 mediatype);
+Result APT_DoAppJump(Handle* handle, u32 NSbuf0Size, u32 NSbuf1Size, u8 *NSbuf0Ptr, u8 *NSbuf1Ptr);
+

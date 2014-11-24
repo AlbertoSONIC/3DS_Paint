@@ -19,15 +19,19 @@ extern "C" {
 #include <3ds/services/fs.h>
 #include <3ds/services/gsp.h>
 #include <3ds/services/hid.h>
+#include <3ds/services/irrst.h>
 #include <3ds/services/httpc.h>
 #include <3ds/services/ir.h>
 #include <3ds/services/ptm.h>
 #include <3ds/services/soc.h>
 #include <3ds/services/mic.h>
+#include <3ds/services/mvd.h>
 
 #include <3ds/gpu/gx.h>
 #include <3ds/gpu/gpu.h>
 #include <3ds/gpu/shdr.h>
+
+#include <3ds/sdmc.h>
 
 #ifdef __cplusplus
 }

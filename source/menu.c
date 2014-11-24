@@ -49,6 +49,8 @@ int posxy[320][240];
 int x = 0;
 int y = 0;
 
+int time = 0;
+
 //Input
 u32 input;
 
@@ -72,25 +74,32 @@ void menu()
 	hidScanInput();
 	input = hidKeysDown();
 
-	//Mode 0=menu, mode 1=paint, mode 2=about, mode 3=settings
+	//Mode 0=menu, mode 1=paint, mode 2=about, mode 3=settings, mode 4 = exit
+
+	if (time == 1)
+	{
+		printTime();
+		screenRender();
+		printTime();
+		screenRender();
+	}
+
 
 	//Menu
 	if (mode == 0)
 	{
-		
 
 		//Rendering the menu ui
 		if (rendered == 0)
 		{
 			printBottomMenu();
 			printTopMenu();
-			printTime();
 			screenRender();
 			printBottomMenu();
 			printTopMenu();
-			printTime();
 			screenRender();
 			rendered = 1;
+			time = 1;
 		}
 		//Enter painting
 		if ((posX >= 14 && posX <= 302) && (posY >= 68 && posY <= 131))
@@ -101,11 +110,8 @@ void menu()
 
 		//If you tap exit
 		if ((posX >= 14 && posX <= 302) && (posY >= 149 && posY <= 212))
-		{
-			
-			aptReturnToMenu();
-			rendered = 0;
-			
+		{			
+			mode = 0;
 		}
 
 		//If you tap about
@@ -392,6 +398,11 @@ void paint()
 	u16 posY = myTouchPosition.py;
 	hidScanInput();
 	input = hidKeysDown();
+
+	printTime();
+	screenRender();
+	printTime();
+	screenRender();
 
 
 	//If first boot or time to reset
