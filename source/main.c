@@ -26,9 +26,11 @@ int main()
 			menu();
 		}
 
-
             gspWaitForVBlank();
 	}
+
+
+
 
 	// Exit services
 	gfxExit();

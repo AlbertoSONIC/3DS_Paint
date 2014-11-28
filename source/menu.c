@@ -514,7 +514,7 @@ void paint()
 	{
 
 		variableReset();
-		state = 1;
+		state = 0;
 	}
 
 	//If you tap No
