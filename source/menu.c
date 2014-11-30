@@ -19,9 +19,8 @@ int state = 0;
 
 int mode = 0;
 
-//rev1-2= program revision
-int rev1 = 2;
-int rev2 = 0;
+//Debug mode, ON or OFF:
+int debug = 0;
 
 //Pen color
 
@@ -43,6 +42,8 @@ int rendered = 0;
 //warn becames 1 if the warning prompt is showing up, 2 if it is waiting for a Yes or a No, 0 if it isn't on the screen
 int warn = 0;
 
+int paintExit = 0;
+
 //Needed to print pixels
 
 int posxy[320][240];
@@ -59,6 +60,9 @@ u8* screenBottom = 0;
 u8* screenTopLeft = 0;
 u8* screenTopRight = 0;
 
+int debugX;
+int debugY;
+
 
 void menu()
 {
@@ -74,7 +78,10 @@ void menu()
 	hidScanInput();
 	input = hidKeysDown();
 
-	//Mode 0=menu, mode 1=paint, mode 2=about, mode 3=settings, mode 4 = exit
+	debugX = posX;
+	debugY = posY;
+
+	//Mode 0=menu, mode 1=paint, mode 2=about, mode 3=debug
 
 	if (time == 1)
 	{
@@ -150,24 +157,32 @@ void menu()
 		}
 	}
 
-	//Settings
+	//Debug
 	if (mode == 3)
 	{
 		//Rendering popup
 		if (rendered == 0)
 		{
-			printSettings();
+			printDebug();
 			screenRender();
-			printSettings();
+			printDebug();
 			screenRender();
 			rendered = 1;
 		}
-		//If you tap close
-		if (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)
+		//If you tap yes, then it sets debug to 1
+		if (((posX >= 50 && posX <= 141) && (posY >= 151 && posY <= 179)) || input & KEY_A)
+		{
+			debug = 1;
+			mode = 0;
+			rendered = 0;
+		}
+
+		//If you tap No
+		if (((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179)) || input & KEY_B)
 		{
 			rendered = 0;
+			debug = 0;
 			mode = 0;
-		
 		}
 	}
 }
@@ -195,7 +210,7 @@ void printBottomMenu()
 	sprintf(buffer, "About");
 	drawString(buffer, 30, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "Settings");
+	sprintf(buffer, "  Debug");
 	drawString(buffer, 228, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 	sprintf(buffer, "START PAINTING");
@@ -248,7 +263,7 @@ void printAbout()
 
 }
 
-void printSettings()
+void printDebug()
 {
 	//Prints a dark grey rectangle!
 	drawFillRect(36, 60, 272, 85, 128, 128, 128, screenBottom);
@@ -257,32 +272,34 @@ void printSettings()
 	drawFillRect(36, 85, 272, 189, 160, 160, 160, screenBottom);
 
 	//Prints the buttons!
-	drawFillRect(107, 155, 198, 183, 192, 192, 192, screenBottom);
-
+	drawFillRect(50, 151, 141, 179, 192, 192, 192, screenBottom);
+	drawFillRect(166, 151, 257, 179, 192, 192, 192, screenBottom);
 
 	//Prints the text!
 	char buffer[100];
 
-	sprintf(buffer, "  ERROR:");
+	sprintf(buffer, "DEBUG:");
 	drawString(buffer, 124, 71, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "Work in Progress... ");
-	drawString(buffer, 51, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	sprintf(buffer, "Do you want to enable ");
+	drawString(buffer, 48, 102, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "      (A) Close");
-	drawString(buffer, 71, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	sprintf(buffer, "DEBUG mode?");
+	drawString(buffer, 48, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+	sprintf(buffer, "Yes (A)        No (B)");
+	drawString(buffer, 66, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 }
-
 
 void printTopMenu()
 {
 
 		clearTop();
 
-		//Prints the brown background!
-		drawFillRect(0, 0, 400, 240, 242, 204, 146, screenTopLeft);
-		drawFillRect(0, 0, 400, 240, 242, 204, 146, screenTopRight);
+		//Prints the background!
+		drawFillRect(0, 0, 400, 240, 166, 221, 238, screenTopLeft);
+		drawFillRect(0, 0, 400, 240, 166, 221, 238, screenTopRight);
 
 		//Prints the DPAD
 		drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopLeft);
@@ -291,17 +308,17 @@ void printTopMenu()
 		drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopLeft);
 		drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopRight);
 
-		drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopLeft);
-		drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopRight);
+		drawFillRect(0, 129, 17, 134, 166, 221, 238, screenTopLeft);
+		drawFillRect(0, 129, 17, 134, 166, 221, 238, screenTopRight);
 
-		drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopLeft);
-		drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopRight);
+		drawFillRect(42, 69, 48, 106, 166, 221, 238, screenTopLeft);
+		drawFillRect(42, 69, 48, 106, 166, 221, 238, screenTopRight);
 
-		drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopLeft);
-		drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopRight);
+		drawFillRect(72, 129, 107, 134, 166, 221, 238, screenTopLeft);
+		drawFillRect(72, 129, 107, 134, 166, 221, 238, screenTopRight);
 
-		drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopLeft);
-		drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopRight);
+		drawFillRect(42, 159, 48, 196, 166, 221, 238, screenTopLeft);
+		drawFillRect(42, 159, 48, 196, 166, 221, 238, screenTopRight);
 
 		//Blue rect
 		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
@@ -364,6 +381,35 @@ void printTime()
 	drawString(buffer, 300, 203, 255, 255, 255, screenTopLeft, GFX_LEFT);
 	drawString(buffer, 300, 203, 255, 255, 255, screenTopRight, GFX_LEFT);
 
+
+	if (debug == 1)
+	{
+		drawFillRect(79, 163, 264, 239, 0, 0, 0, screenTopLeft);
+		drawFillRect(79, 163, 264, 239, 0, 0, 0, screenTopRight);
+
+		sprintf(buffer, "mode= %d      state= %d", mode, state);
+		drawString(buffer, 85, 171, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 85, 171, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		sprintf(buffer, "color= %d     debug= %d", color, debug);
+		drawString(buffer, 85, 181, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 85, 181, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		sprintf(buffer, "rendered= %d   warn= %d", rendered, warn);
+		drawString(buffer, 85, 191, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 85, 191, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		sprintf(buffer, "Touch posX= %d", debugX);
+		drawString(buffer, 85, 211, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 85, 211, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		sprintf(buffer, "Touch posY= %d", debugY);
+		drawString(buffer, 85, 221, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 85, 221, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+
+	}
+
 }
 
 // ************************************************************************************************************************
@@ -374,6 +420,7 @@ void variableReset()
 {
 	warn = 0;
 	color = 0;
+	paintExit = 0;
 	for (y = 34; y < 240; y++)
 	{
 		for (x = 0; x < 320; x++)
@@ -399,11 +446,13 @@ void paint()
 	hidScanInput();
 	input = hidKeysDown();
 
-	printTime();
-	screenRender();
-	printTime();
-	screenRender();
+	debugX = posX;
+	debugY = posY;
 
+	printTime();
+	screenRender();
+	printTime();
+	screenRender();
 
 	//If first boot or time to reset
 	if (state == 0)
@@ -458,8 +507,9 @@ void paint()
 	//Press DOWN to exit
 	if (input & KEY_DOWN && warn == 0)
 	{
-		mode = 0;
-		rendered = 0;
+		
+		warn = 1;
+		paintExit = 1;
 	}
 
 	//Changes color/Eraser)
@@ -510,29 +560,28 @@ void paint()
 	}
 
 	//If you tap yes, then it sets state to 0
-	if ((posX >= 50 && posX <= 141) && (posY >= 151 && posY <= 179) && warn == 2)
+	if ((((posX >= 50 && posX <= 141) && (posY >= 151 && posY <= 179)) || input & KEY_A) && warn == 2)
 	{
+		if (paintExit == 1)
+		{
+			mode = 0;
+			variableReset();
+			rendered = 0;
+		}
+		else
+		{
+			variableReset();
+			state = 0;
+		}
 
-		variableReset();
-		state = 0;
 	}
 
 	//If you tap No
-	if ((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179) && warn == 2)
+	if ((((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179)) || input & KEY_B) && warn == 2)
 	{
 		renderBottomUi();
 		warn = 0;
-	}
-
-	//Yes/No using A/B
-	if (input & KEY_A && warn == 2)
-	{
-		state = 0;
-	}
-	if (input & KEY_B && warn == 2)
-	{
-		renderBottomUi();
-		warn = 0;
+		paintExit = 0;
 	}
 
 }
@@ -688,7 +737,7 @@ void printWarning()
 	sprintf(buffer, "Are you sure that you");
 	drawString(buffer, 48, 102, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
-	sprintf(buffer, "want to clear everything?");
+	sprintf(buffer, "want to do that?");
 	drawString(buffer, 48, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
 
 	sprintf(buffer, "Yes (A)        No (B)");

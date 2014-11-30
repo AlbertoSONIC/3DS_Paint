@@ -4,7 +4,7 @@
 void menu();
 void printAbout();
 void printBottomMenu();
-void printSettings();
+void printDebug();
 void printTopMenu();
 
 void paint();
