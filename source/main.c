@@ -1,5 +1,7 @@
 #include <3ds.h>
-#include "menu.h"
+#include "app.h"
+#include "input.h"
+#include "rendering.h"
 
 int main()
 {
@@ -8,29 +10,33 @@ int main()
 	aptInit();
 	hidInit(NULL);
 	gfxInit();
-	//gfxSet3D(true); // uncomment if using stereoscopic 3D
 
 	// Main loop
 	while (aptMainLoop())
 	{
+		//As nop90 suggested
+		getFB();
 
-		// Your code goes here
+		//Gets input (keys and touch)
+		getInput();
 
-		
-		if (mode == 1)
-		{
-			paint();
-		}
-		else
-		{
-			menu();
-		}
+		//Prints the GUI
+		printGUI();
 
-            gspWaitForVBlank();
+		//Do stuff
+		app();
+
+		//Jumps to the required mode (menu or paint) or exit
+		if (input & KEY_START || mode==5)
+			break;
+
+		// Flush and swap framebuffers
+		gfxFlushBuffers();
+		gfxSwapBuffers();
+
+		//Wait for VBlank
+		gspWaitForVBlank();
 	}
-
-
-
 
 	// Exit services
 	gfxExit();

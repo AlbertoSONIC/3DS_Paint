@@ -1,5 +1,7 @@
-#include "menu.h"
+#include "app.h"
 #include "draw.h"
+#include "rendering.h"
+#include "input.h"
 
 //For ctrulib
 #include <3ds\types.h>
@@ -43,6 +45,7 @@ int rendered = 0;
 int warn = 0;
 
 int paintExit = 0;
+int appExit = 0;
 
 //Needed to print pixels
 
@@ -52,32 +55,389 @@ int y = 0;
 
 int time = 0;
 
-//Input
-u32 input;
-
-//Screen variables
-u8* screenBottom = 0;
-u8* screenTopLeft = 0;
-u8* screenTopRight = 0;
-
+//Debug variables
 int debugX;
 int debugY;
 
 
+
+void app()
+{
+	//Debug related stuff
+	debugX = posX;
+	debugY = posY;
+
+	//Do things based off current mode
+	if (mode==0)
+	{
+		//App menu
+
+		//Enter painting
+		if ((posX >= 14 && posX <= 302) && (posY >= 68 && posY <= 131))
+		{
+			mode = 1;
+			state = 0; //Cleans the drawing
+		}
+
+		//If you tap exit
+		if ((posX >= 14 && posX <= 302) && (posY >= 149 && posY <= 212)) warn = 1;
+
+
+		//If you tap about
+		if ((posX >= 6 && posX <= 92) && (posY >= 6 && posY <= 33)) mode = 2;
+
+		//If you tap settings
+		if ((posX >= 220 && posX <= 303) && (posY >= 6 && posY <= 33)) mode = 3;
+
+
+		//WARNING BOX
+		//If you tap yes, then it sets mode to 4
+		if ((((posX >= 50 && posX <= 141) && (posY >= 151 && posY <= 179)) || input & KEY_A) && warn == 1) mode = 5;
+
+		//If you tap No
+		if ((((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179)) || input & KEY_B) && warn == 1)	warn = 0;
+	}
+	else
+	{
+		if (mode == 1)
+		{
+			//App paint
+
+
+		}
+		else
+		{
+			if (mode == 2)
+			{
+				//App about
+
+				//If you tap close
+				if (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)
+				{
+					mode = 0;
+         			rendered = 0;
+				}
+
+			}
+			else
+			{
+				if (mode == 3)
+				{
+
+					//App debug
+					//If you tap yes, then it sets debug to 1
+					if (((posX >= 50 && posX <= 141) && (posY >= 151 && posY <= 179)) || input & KEY_A)
+					{
+						debug = 1;
+						mode = 0;
+					}
+
+					//If you tap No
+					if (((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179)) || input & KEY_B)
+					{
+						debug = 0;
+						mode = 0;
+					}
+
+				}
+			}
+		}
+	}
+}
+
+
+void printGUI()
+{
+	//print the GUI
+    char buffer[100];
+
+	//---------------------------------------------------------------------    TOP SCREEN - TYPES: paint, menu   ------------------------------------------------------------------------------------------
+	if (mode == 1) //paint
+	{
+
+	}
+	else //menu
+	{
+			//Prints the background!
+			drawFillRect(0, 0, 400, 240, 166, 221, 238, screenTopLeft);
+			drawFillRect(0, 0, 400, 240, 166, 221, 238, screenTopRight);
+
+			//Prints the DPAD
+			drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopLeft);
+			drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopRight);
+
+			drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopLeft);
+			drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopRight);
+
+			drawFillRect(0, 129, 17, 134, 166, 221, 238, screenTopLeft);
+			drawFillRect(0, 129, 17, 134, 166, 221, 238, screenTopRight);
+
+			drawFillRect(42, 69, 48, 106, 166, 221, 238, screenTopLeft);
+			drawFillRect(42, 69, 48, 106, 166, 221, 238, screenTopRight);
+
+			drawFillRect(72, 129, 107, 134, 166, 221, 238, screenTopLeft);
+			drawFillRect(72, 129, 107, 134, 166, 221, 238, screenTopRight);
+
+			drawFillRect(42, 159, 48, 196, 166, 221, 238, screenTopLeft);
+			drawFillRect(42, 159, 48, 196, 166, 221, 238, screenTopRight);
+
+			//Blue rect
+			drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
+			drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopRight);
+
+
+			//Text
+			
+
+			sprintf(buffer, "       ");
+			drawString(buffer, 1, 31, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 31, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "                                  DS Paint");
+			drawString(buffer, 1, 46, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 46, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "                                 3");
+			drawString(buffer, 1, 46, 255, 0, 0, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 46, 255, 0, 0, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "                                 Coded by");
+			drawString(buffer, 1, 66, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 66, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "                                 AlbertoSONIC");
+			drawString(buffer, 1, 76, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 76, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "   ");
+			drawString(buffer, 3, 218, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 3, 218, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "   ");
+			drawString(buffer, 3, 228, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 3, 228, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "                ");
+			drawString(buffer, 1, 121, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 121, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "                ");
+			drawString(buffer, 1, 131, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 131, 255, 255, 255, screenTopRight, GFX_LEFT);
+	}
+	
+	    //CLOCK - SAME FOR EVERY MODE
+		drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopLeft);
+		drawFillRect(276, 196, 400, 219, 255, 0, 0, screenTopRight);
+
+		u64 timeInSeconds = osGetTime() / 1000;
+		u64 dayTime = timeInSeconds % SECONDS_IN_DAY;
+		sprintf(buffer, "%llu:%llu:%llu", dayTime / SECONDS_IN_HOUR, (dayTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, dayTime % SECONDS_IN_MINUTE);
+
+		drawString(buffer, 300, 203, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 300, 203, 255, 255, 255, screenTopRight, GFX_LEFT);
+		
+		
+		//DEBUG - ONLY IF debug==1
+		if (debug == 1)
+		{
+			drawFillRect(79, 163, 264, 239, 0, 0, 0, screenTopLeft);
+			drawFillRect(79, 163, 264, 239, 0, 0, 0, screenTopRight);
+
+			sprintf(buffer, "mode= %d      state= %d", mode, state);
+			drawString(buffer, 85, 171, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 85, 171, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "color= %d     debug= %d", color, debug);
+			drawString(buffer, 85, 181, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 85, 181, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "rendered= %d   warn= %d", rendered, warn);
+			drawString(buffer, 85, 191, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 85, 191, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "Touch posX= %d", debugX);
+			drawString(buffer, 85, 211, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 85, 211, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			sprintf(buffer, "Touch posY= %d", debugY);
+			drawString(buffer, 85, 221, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 85, 221, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		}
+
+
+
+	//---------------------------------------------------------------------    BOTTOM SCREEN - TYPES: paint, menu   ------------------------------------------------------------------------------------------
+	if (mode == 1) //paint
+	{
+		
+	}
+	else //menu
+	{
+		//Prints a background!
+		drawFillRect(0, 0, 320, 240, 166, 221, 238, screenBottom);
+
+		//Prints the buttons
+		drawFillRect(9, 6, 92, 33, 192, 192, 192, screenBottom);
+		drawFillRect(220, 6, 303, 33, 192, 192, 192, screenBottom);
+
+		drawFillRect(14, 68, 302, 131, 51, 153, 255, screenBottom);
+
+		drawFillRect(14, 149, 302, 212, 255, 0, 0, screenBottom);
+
+		//Prints the text
+		sprintf(buffer, "About");
+		drawString(buffer, 30, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "  Debug");
+		drawString(buffer, 228, 16, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "START PAINTING");
+		drawString(buffer, 98, 81, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Start painting right now!");
+		drawString(buffer, 58, 108, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "EXIT 3DS PAINT");
+		drawString(buffer, 100, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Go back to homebrew launcher");
+		drawString(buffer, 48, 180, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "or 3DS Main Menu");
+		drawString(buffer, 89, 192, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	}
+
+
+	//-----------------------------------------------------------------------------------------------   WARNINGS, POPUPS, ABOUT, DEBUG -----------------------------------------------------------------------------------------------
+	if (warn == 1)
+	{
+		//WARNING
+		//Prints a dark grey rectangle!
+		drawFillRect(36, 60, 272, 85, 128, 128, 128, screenBottom);
+
+		//Prints a light grey rectangle!
+		drawFillRect(36, 85, 272, 189, 160, 160, 160, screenBottom);
+
+		//Prints the buttons!
+		drawFillRect(50, 151, 141, 179, 192, 192, 192, screenBottom);
+		drawFillRect(166, 151, 257, 179, 192, 192, 192, screenBottom);
+
+		//Prints the text!
+		char buffer[100];
+
+		sprintf(buffer, "WARNING!");
+		drawString(buffer, 124, 71, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Are you sure that you");
+		drawString(buffer, 48, 102, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "want to do that?");
+		drawString(buffer, 48, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Yes (A)        No (B)");
+		drawString(buffer, 66, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	}
+	else if (mode == 2)
+	{
+		//ABOUT
+		//Prints a dark grey rectangle!
+		drawFillRect(36, 60, 272, 85, 128, 128, 128, screenBottom);
+
+		//Prints a light grey rectangle!
+		drawFillRect(36, 85, 272, 189, 160, 160, 160, screenBottom);
+
+		//Prints the buttons!
+		drawFillRect(107, 155, 198, 183, 192, 192, 192, screenBottom);
+
+     	//Prints the text!
+		char buffer[100];
+
+		sprintf(buffer, "  ABOUT");
+		drawString(buffer, 124, 71, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "App: 3DS Paint");
+		drawString(buffer, 41, 102, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Developer: AlbertoSONIC");
+		drawString(buffer, 41, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Version: 2.0");
+		drawString(buffer, 41, 122, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "      (A) Close");
+		drawString(buffer, 71, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	}
+	else if (mode == 3)
+	{
+		//DEBUG
+		//Prints a dark grey rectangle!
+		drawFillRect(36, 60, 272, 85, 128, 128, 128, screenBottom);
+
+		//Prints a light grey rectangle!
+		drawFillRect(36, 85, 272, 189, 160, 160, 160, screenBottom);
+
+		//Prints the buttons!
+		drawFillRect(50, 151, 141, 179, 192, 192, 192, screenBottom);
+		drawFillRect(166, 151, 257, 179, 192, 192, 192, screenBottom);
+
+		//Prints the text!
+		char buffer[100];
+
+		sprintf(buffer, "DEBUG:");
+		drawString(buffer, 124, 71, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Do you want to enable ");
+		drawString(buffer, 48, 102, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "DEBUG mode?");
+		drawString(buffer, 48, 112, 255, 255, 255, screenBottom, GFX_BOTTOM);
+
+		sprintf(buffer, "Yes (A)        No (B)");
+		drawString(buffer, 66, 162, 255, 255, 255, screenBottom, GFX_BOTTOM);
+	}
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 void menu()
 {
-	touchPosition myTouchPosition;
-
-	//Pass pointer to hidTouchRead function which updates values.
-	hidTouchRead(&myTouchPosition);
-
-	//Read x cord
-	u16 posX = myTouchPosition.px;
-	//Read y cord
-	u16 posY = myTouchPosition.py;
-	hidScanInput();
-	input = hidKeysDown();
-
 	debugX = posX;
 	debugY = posY;
 
@@ -117,8 +477,10 @@ void menu()
 
 		//If you tap exit
 		if ((posX >= 14 && posX <= 302) && (posY >= 149 && posY <= 212))
-		{			
-			mode = 0;
+		{		
+			warn = 1;
+			appExit = 1;
+			rendered = 0;
 		}
 
 		//If you tap about
@@ -434,21 +796,11 @@ void variableReset()
 
 void paint()
 {
-	touchPosition myTouchPosition;
-
-	//Pass pointer to hidTouchRead function which updates values.
-	hidTouchRead(&myTouchPosition);
-
-	//Read x cord
-	u16 posX = myTouchPosition.px;
-	//Read y cord
-	u16 posY = myTouchPosition.py;
-	hidScanInput();
-	input = hidKeysDown();
-
+    //Debug stuff
 	debugX = posX;
 	debugY = posY;
 
+	//Time
 	printTime();
 	screenRender();
 	printTime();
@@ -506,8 +858,7 @@ void paint()
 
 	//Press DOWN to exit
 	if (input & KEY_DOWN && warn == 0)
-	{
-		
+	{	
 		warn = 1;
 		paintExit = 1;
 	}
@@ -528,7 +879,6 @@ void paint()
 		{
 			color = color + 1;
 			renderBottomUi();
-
 		}
 	}
 
@@ -570,8 +920,12 @@ void paint()
 		}
 		else
 		{
-			variableReset();
-			state = 0;
+			if (appExit == 1) mode = 5;
+			else
+			{
+				variableReset();
+				state = 0;
+			}
 		}
 
 	}
@@ -582,6 +936,7 @@ void paint()
 		renderBottomUi();
 		warn = 0;
 		paintExit = 0;
+		appExit = 0;
 	}
 
 }
@@ -821,31 +1176,4 @@ void printTop()
 
 }
 
-
-//----------------------------------------- SCREEN RENDERING UTILS -------------------------------------------------
-
-//Screen rendering (both top and bottom)
-void screenRender()
-{
-	gfxFlushBuffers();
-	gfxSwapBuffers();
-	screenBottom = gfxGetFramebuffer(GFX_BOTTOM, GFX_BOTTOM, NULL, NULL);
-	screenTopLeft = gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL);
-	screenTopRight = gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL);
-}
-
-//Clears the top screen
-void clearTop()
-{
-	screenTopLeft = gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL);
-	screenTopRight = gfxGetFramebuffer(GFX_TOP, GFX_LEFT, NULL, NULL);
-	clearScreen(screenTopLeft, GFX_LEFT);
-	clearScreen(screenTopRight, GFX_LEFT);
-}
-
-//Clears the bottom screen
-void clearBottom()
-{
-	screenBottom = gfxGetFramebuffer(GFX_BOTTOM, GFX_BOTTOM, NULL, NULL);
-	clearScreen(screenBottom, GFX_BOTTOM);
-}
+*/

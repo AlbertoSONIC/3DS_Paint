@@ -1,6 +1,9 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef APP_H
+#define APP_H
 
+void app();
+void renderGUI();
+void printGUI();
 void menu();
 void printAbout();
 void printBottomMenu();
@@ -18,10 +21,6 @@ void printTop();
 void printWarning();
 void printTime();
 
-void screenRender();
-void screenRefresh();
-void clearBottom();
-void clearTop();
 
 extern int mode;
 
