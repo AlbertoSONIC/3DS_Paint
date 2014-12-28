@@ -26,10 +26,9 @@ int main()
 		//Do stuff
 		app();
 
-		//Jumps to the required mode (menu or paint) or exit
-		if (input & KEY_START || mode==5)
-			break;
-
+		//Exit code
+		if (mode==5) break;
+			
 		// Flush and swap framebuffers
 		gfxFlushBuffers();
 		gfxSwapBuffers();
