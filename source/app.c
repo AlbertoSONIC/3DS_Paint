@@ -4,9 +4,8 @@
 #include "input.h"
 
 //For ctrulib
-#include <3ds\types.h>
-#include <3ds\services\hid.h>
-#include <3ds\gfx.h>
+#include <3ds.h>
+
 
 //For sprintF
 #include <stdio.h>
@@ -15,33 +14,17 @@
 #define SECONDS_IN_DAY 86400
 #define SECONDS_IN_HOUR 3600
 #define SECONDS_IN_MINUTE 60
+int time = 0;
 
-//STATE: 0=start/reset
+//STATE: 0=start/reset MODE: 0=menu, 1=paint, 2=about, 3=debug
 int state = 0;
-
 int mode = 0;
 
 //Debug mode, ON or OFF:
 int debug = 0;
 
-//Pen color
-
-/*
-0 - Eraser
-1 - Red
-2 - Orange
-3 - Yellow
-4 - Green
-5 - SkyBlue
-6 - Blue
-7 - Pink
-8 - Black
-*/
-int color = 0;
-
-//warn becames 1 if the warning prompt is showing up
+//warn becames 1 if the warning prompt is showing up, paintExit=1 means that you are trying to exit paint and not to clear everything
 int warn = 0;
-
 int paintExit = 0;
 
 //Needed to print pixels
@@ -49,12 +32,23 @@ int posxy[320][240];
 int x = 0;
 int y = 0;
 
-int time = 0;
+//Needed for gui
+int x1;
+int x2;
+int box;
 
-//Debug variables
-int debugX;
-int debugY;
-
+// COLOR TABLE (8 colors, 3-->R G B
+int color = 0;
+int cTable[8][3]={
+	{ 255, 255, 255 }, //0 - Eraser/White
+	{ 255, 0, 0 },     //1 - Red
+	{ 255, 128, 0 },   //2 - Orange
+	{ 255, 255, 0 },   //3 - Yellow
+	{ 0, 255, 0 },     //4 - Green
+	{ 51, 255, 255 },  //5 - SkyBlue
+	{ 0, 0, 255 },     //6 - Blue
+	{ 0, 0, 0 }        //7 - Black
+};
 
 //Variable reset
 void variableReset()
@@ -75,10 +69,6 @@ void variableReset()
 
 void app()
 {
-	//Debug related stuff
-	debugX = posX;
-	debugY = posY;
-
 	//Do things based off current mode
 	if (mode==0)
 	{
@@ -88,7 +78,7 @@ void app()
 		if ((posX >= 14 && posX <= 302) && (posY >= 68 && posY <= 131))
 		{
 			mode = 1;
-			state = 0; //Cleans the drawing
+			state = 0;
 		}
 
 		//If you tap exit
@@ -126,7 +116,6 @@ void app()
 				posxy[posX - 1][posY] = color;
 				posxy[posX + 1][posY] = color;
 
-
 				//Square dot
 				posxy[posX - 1][posY - 1] = color;
 				posxy[posX + 1][posY + 1] = color;
@@ -163,6 +152,7 @@ void app()
 					warn = 0;
 					paintExit = 0;
 					mode = 0;
+					variableReset();
 				}
 			}
 			//If you tap No
@@ -376,11 +366,11 @@ void printGUI()
 			drawString(buffer, 85, 191, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 191, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-			sprintf(buffer, "Touch posX= %d", debugX);
+			sprintf(buffer, "Touch posX= %d", posX);
 			drawString(buffer, 85, 211, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 211, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-			sprintf(buffer, "Touch posY= %d", debugY);
+			sprintf(buffer, "Touch posY= %d",posY);
 			drawString(buffer, 85, 221, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 221, 255, 255, 255, screenTopRight, GFX_LEFT);
 
@@ -397,7 +387,7 @@ void printGUI()
 		//Prints the brown toolbar bar!
 		drawFillRect(0, 0, 320, 34, 242, 204, 146, screenBottom);
 
-		//Prints yellows rectangle by checking if color = red, blue, black or eraser!
+		//Highlights the selected color
 		if (color == 0)
 		{
 			drawFillRect(15, 3, 50, 31, 160, 160, 160, screenBottom);
@@ -435,52 +425,23 @@ void printGUI()
 		drawFillRect(19, 8, 39, 26, 255, 0, 0, screenBottom);
 		drawFillRect(39, 9, 46, 25, 255, 255, 255, screenBottom);
 
-		//Prints 3 color boxes!
-		drawFillRect(87, 9, 103, 24, 255, 0, 0, screenBottom);
-		drawFillRect(121, 9, 137, 24, 255, 128, 0, screenBottom);
-		drawFillRect(155, 9, 171, 24, 255, 255, 0, screenBottom);
-		drawFillRect(189, 9, 205, 24, 0, 255, 0, screenBottom);
-		drawFillRect(223, 9, 239, 24, 51, 255, 255, screenBottom);
-		drawFillRect(257, 9, 273, 24, 0, 0, 255, screenBottom);
-		drawFillRect(291, 9, 307, 24, 0, 0, 0, screenBottom);
+		//Prints 8 color boxes!
+		x1 = 87;
+		x2 = 103;
+		for (box = 1; box < 8; box++)
+		{
+			drawFillRect(x1, 9, x2, 24, cTable[box][0], cTable[box][1], cTable[box][2], screenBottom);
+			x1 = x1 + 34;
+			x2 = x2 + 34;
+		}
+
 
 		//Print drawing
 		for (y = 35; y < 240; y++)
 		{
 			for (x = 0; x < 320; x++)
 			{
-				if (posxy[x][y] == 0)
-				{
-					drawPixel(x, y, 255, 255, 255, screenBottom);
-				}
-				if (posxy[x][y] == 1)
-				{
-					drawPixel(x, y, 255, 0, 0, screenBottom);
-				}
-				if (posxy[x][y] == 2)
-				{
-					drawPixel(x, y, 255, 128, 0, screenBottom);
-				}
-				if (posxy[x][y] == 3)
-				{
-					drawPixel(x, y, 255, 255, 0, screenBottom);
-				}
-				if (posxy[x][y] == 4)
-				{
-					drawPixel(x, y, 0, 255, 0, screenBottom);
-				}
-				if (posxy[x][y] == 5)
-				{
-					drawPixel(x, y, 51, 255, 255, screenBottom);
-				}
-				if (posxy[x][y] == 6)
-				{
-					drawPixel(x, y, 0, 0, 255, screenBottom);
-				}
-				if (posxy[x][y] == 7)
-				{
-					drawPixel(x, y, 0, 0, 0, screenBottom);
-				}
+					drawPixel(x, y, cTable[posxy[x][y]][0], cTable[posxy[x][y]][1], cTable[posxy[x][y]][2], screenBottom);
 			}
 		}
 
