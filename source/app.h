@@ -6,6 +6,9 @@ void printGUI();
 void variableReset();
 
 extern int mode;
+extern int printFPS;
+extern int debug;
+extern int warn;
 
 
 #endif

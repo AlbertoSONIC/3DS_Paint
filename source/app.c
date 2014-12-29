@@ -37,6 +37,9 @@ int x1;
 int x2;
 int box;
 
+//FPS Counter
+int printFPS;
+
 // COLOR TABLE (8 colors, 3-->R G B
 int color = 0;
 int cTable[8][3]={
@@ -362,7 +365,7 @@ void printGUI()
 			drawString(buffer, 85, 181, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 181, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-			sprintf(buffer, "paintExit= %d  warn= %d", paintExit, warn);
+			sprintf(buffer, "FPS= %d       warn= %d", printFPS, warn);
 			drawString(buffer, 85, 191, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 191, 255, 255, 255, screenTopRight, GFX_LEFT);
 

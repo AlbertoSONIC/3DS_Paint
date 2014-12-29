@@ -3,6 +3,10 @@
 #include "input.h"
 #include "rendering.h"
 
+//FPS Counter
+u64 tickOld;
+int fps;
+
 int main()
 {
 	// Initialize services
@@ -14,6 +18,17 @@ int main()
 	// Main loop
 	while (aptMainLoop())
 	{
+		//Screen flickering workaround
+		if (warn == 1 && debug == 1) gspWaitForVBlank();
+
+		//FPS Counter
+		if (svcGetSystemTick() >= tickOld + 268123480)
+		{
+			tickOld = svcGetSystemTick();
+			printFPS = fps;
+			fps = 0;
+		}
+
 		//As nop90 suggested
 		getFB();
 
@@ -35,6 +50,8 @@ int main()
 
 		//Wait for VBlank
 		gspWaitForVBlank();
+
+		fps++;
 	}
 
 	// Exit services
