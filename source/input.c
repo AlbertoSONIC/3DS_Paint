@@ -1,8 +1,7 @@
 #include "input.h"
 
 //For ctrulib
-#include <3ds\types.h>
-#include <3ds\services\hid.h>
+#include <3ds.h>
 
 //For sprintF
 #include <stdio.h>
