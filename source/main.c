@@ -13,7 +13,7 @@ int main()
 	srvInit();
 	aptInit();
 	hidInit(NULL);
-	gfxInit();
+	gfxInitDefault();
 
 	// Main loop
 	while (aptMainLoop())
