@@ -27,8 +27,6 @@ int main()
 	// Main loop
 	while (aptMainLoop())
 	{
-		//Screen flickering workaround
-		if (warn == 1 && debug == 1) gspWaitForVBlank();
 
 		//FPS Counter
 		if (svcGetSystemTick() >= tickOld + 268123480)

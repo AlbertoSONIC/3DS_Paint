@@ -17,6 +17,7 @@ int time = 0;
 int state = 0;
 int mode = 0;
 int save = 0;
+int rendered = 0; //Performance Improvements
 
 //Debug mode, ON or OFF:
 int debug = 0;
@@ -80,6 +81,7 @@ void app()
 		{
 			mode = 1;
 			state = 0;
+			rendered = 0;
 		}
 
 		//If you tap exit
@@ -139,6 +141,7 @@ void app()
 			{
 				warn = 1;
 				paintExit = 1;
+				rendered = 0;
 			}
 
 			//Press UP to show it up!
@@ -198,95 +201,101 @@ void app()
 void printGUI()
 {
 	//print the GUI
-    char buffer[100];
+	char buffer[100];
 
 	//---------------------------------------------------------------------    TOP SCREEN - TYPES: paint, menu   ------------------------------------------------------------------------------------------
 	if (mode == 1) //paint
 	{
-		//Prints the brown background!
-		drawFillRect(0, 0, 399, 239, 242, 204, 146, screenTopLeft);
-		drawFillRect(0, 0, 399, 239, 242, 204, 146, screenTopRight);
+		if (rendered !=2)
+		{
 
-		//Prints the DPAD
-		drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopLeft);
-		drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopRight);
+			//Prints the brown background!
+			drawFillRect(0, 0, 399, 239, 242, 204, 146, screenTopLeft);
+			drawFillRect(0, 0, 399, 239, 242, 204, 146, screenTopRight);
 
-		drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopLeft);
-		drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopRight);
+			//Prints the DPAD
+			drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopLeft);
+			drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopRight);
 
-		drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopLeft);
-		drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopRight);
+			drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopLeft);
+			drawFillRect(0, 110, 120, 153, 255, 255, 255, screenTopRight);
 
-		drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopLeft);
-		drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopRight);
+			drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopLeft);
+			drawFillRect(0, 129, 17, 134, 242, 204, 146, screenTopRight);
 
-		drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopLeft);
-		drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopRight);
+			drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopLeft);
+			drawFillRect(42, 69, 48, 106, 242, 204, 146, screenTopRight);
 
-		drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopLeft);
-		drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopRight);
+			drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopLeft);
+			drawFillRect(72, 129, 107, 134, 242, 204, 146, screenTopRight);
 
-		//Blue rect
-		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
-		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopRight);
+			drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopLeft);
+			drawFillRect(42, 159, 48, 196, 242, 204, 146, screenTopRight);
 
-		//Green rect (save)
-		drawFillRect(257, 138, 400, 168, 69, 206, 48, screenTopLeft);
-		drawFillRect(257, 138, 400, 168, 69, 206, 48, screenTopRight);
+			//Blue rect
+			drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
+			drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopRight);
 
-		//Text
-		sprintf(buffer, "   CLEAN    ");
-		drawString(buffer, 1, 31, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 31, 255, 255, 255, screenTopRight, GFX_LEFT);
+			//Green rect (save)
+			drawFillRect(257, 138, 400, 168, 69, 206, 48, screenTopLeft);
+			drawFillRect(257, 138, 400, 168, 69, 206, 48, screenTopRight);
 
-		sprintf(buffer, "                                  DS Paint");
-		drawString(buffer, 1, 46, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 46, 255, 255, 255, screenTopRight, GFX_LEFT);
+			//Text
+			sprintf(buffer, "   CLEAN    ");
+			drawString(buffer, 1, 31, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 31, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                                 3");
-		drawString(buffer, 1, 46, 255, 0, 0, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 46, 255, 0, 0, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                                  DS Paint");
+			drawString(buffer, 1, 46, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 46, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                                 Coded by");
-		drawString(buffer, 1, 66, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 66, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                                 3");
+			drawString(buffer, 1, 46, 255, 0, 0, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 46, 255, 0, 0, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                                 AlbertoSONIC");
-		drawString(buffer, 1, 76, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 76, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                                 Coded by");
+			drawString(buffer, 1, 66, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 66, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "   EXIT");
-		drawString(buffer, 3, 218, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 3, 218, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                                 AlbertoSONIC");
+			drawString(buffer, 1, 76, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 76, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "   ");
-		drawString(buffer, 3, 228, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 3, 228, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "   EXIT");
+			drawString(buffer, 3, 218, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 3, 218, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                CHANGE COLOR");
-		drawString(buffer, 1, 121, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 121, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "   ");
+			drawString(buffer, 3, 228, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 3, 228, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                SELECT ERASER");
-		drawString(buffer, 1, 131, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 1, 131, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                CHANGE COLOR");
+			drawString(buffer, 1, 121, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 121, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                                Press SELECT to");
-		drawString(buffer, 3, 145, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 3, 145, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                SELECT ERASER");
+			drawString(buffer, 1, 131, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 1, 131, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-		sprintf(buffer, "                                save your drawing");
-		drawString(buffer, 3, 155, 255, 255, 255, screenTopLeft, GFX_LEFT);
-		drawString(buffer, 3, 155, 255, 255, 255, screenTopRight, GFX_LEFT);
+			sprintf(buffer, "                                Press SELECT to");
+			drawString(buffer, 3, 145, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 3, 145, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-	
+			sprintf(buffer, "                                save your drawing");
+			drawString(buffer, 3, 155, 255, 255, 255, screenTopLeft, GFX_LEFT);
+			drawString(buffer, 3, 155, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			rendered++;
+		}
 	}
 	else //menu
 	{
+		if (rendered != 2)
+		{
 			//Prints the background!
 			drawFillRect(0, 0, 399, 239, 166, 221, 238, screenTopLeft);
 			drawFillRect(0, 0, 399, 239, 166, 221, 238, screenTopRight);
-			
+
 			//Prints the DPAD
 			drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopLeft);
 			drawFillRect(23, 54, 68, 205, 255, 255, 255, screenTopRight);
@@ -312,8 +321,6 @@ void printGUI()
 
 
 			//Text
-			
-
 			sprintf(buffer, "       ");
 			drawString(buffer, 1, 31, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 1, 31, 255, 255, 255, screenTopRight, GFX_LEFT);
@@ -349,8 +356,10 @@ void printGUI()
 			sprintf(buffer, "                ");
 			drawString(buffer, 1, 131, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 1, 131, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+			rendered++;
+		}
 	}
-	
 	    //CLOCK - SAME FOR EVERY MODE
 		drawFillRect(276, 196, 399, 219, 255, 0, 0, screenTopLeft);
 		drawFillRect(276, 196, 399, 219, 255, 0, 0, screenTopRight);
