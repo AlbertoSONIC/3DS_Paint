@@ -1,14 +1,11 @@
+#include <3ds.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 #include "app.h"
 #include "draw.h"
-#include "rendering.h"
 #include "input.h"
-
-//For ctrulib
-#include <3ds.h>
-
-
-//For sprintF
-#include <stdio.h>
+#include "rendering.h"
 
 //For time
 #define SECONDS_IN_DAY 86400
@@ -19,6 +16,7 @@ int time = 0;
 //STATE: 0=start/reset MODE: 0=menu, 1=paint, 2=about, 3=debug
 int state = 0;
 int mode = 0;
+int save = 0;
 
 //Debug mode, ON or OFF:
 int debug = 0;
@@ -165,6 +163,9 @@ void app()
 				paintExit = 0;
 			}
 
+			//Save drawing to sdcard
+			if (input & KEY_SELECT && warn == 0) save=1;
+
 		}
 		else
 		{
@@ -229,6 +230,9 @@ void printGUI()
 		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopLeft);
 		drawFillRect(254, 37, 400, 100, 51, 153, 255, screenTopRight);
 
+		//Green rect (save)
+		drawFillRect(257, 138, 400, 168, 69, 206, 48, screenTopLeft);
+		drawFillRect(257, 138, 400, 168, 69, 206, 48, screenTopRight);
 
 		//Text
 		sprintf(buffer, "   CLEAN    ");
@@ -266,6 +270,14 @@ void printGUI()
 		sprintf(buffer, "                SELECT ERASER");
 		drawString(buffer, 1, 131, 255, 255, 255, screenTopLeft, GFX_LEFT);
 		drawString(buffer, 1, 131, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		sprintf(buffer, "                                Press SELECT to");
+		drawString(buffer, 3, 145, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 3, 145, 255, 255, 255, screenTopRight, GFX_LEFT);
+
+		sprintf(buffer, "                                save your drawing");
+		drawString(buffer, 3, 155, 255, 255, 255, screenTopLeft, GFX_LEFT);
+		drawString(buffer, 3, 155, 255, 255, 255, screenTopRight, GFX_LEFT);
 
 	
 	}

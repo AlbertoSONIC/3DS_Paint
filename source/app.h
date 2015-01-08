@@ -9,6 +9,7 @@ extern int mode;
 extern int printFPS;
 extern int debug;
 extern int warn;
+extern int save;
 
 
 #endif
