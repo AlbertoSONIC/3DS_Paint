@@ -189,6 +189,7 @@ void app()
 					{
 						debug = 0;
 						mode = 0;
+						rendered = 0;
 					}
 
 				}
