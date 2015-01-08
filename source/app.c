@@ -157,6 +157,7 @@ void app()
 					paintExit = 0;
 					mode = 0;
 					variableReset();
+					rendered = 0;
 				}
 			}
 			//If you tap No
