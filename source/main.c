@@ -43,7 +43,7 @@ int main()
 		getInput();
 
 		//Prints the GUI
-		printGUI();
+		printGUI();  
 
 		//Do stuff
 		app();
@@ -56,7 +56,7 @@ int main()
 		{
 			u32 timestamp = (u32)(svcGetSystemTick() / 446872);
 			char file[256];
-			snprintf(file, 256, "/3dspaint%08d.bmp", timestamp);
+			snprintf(file, 256, "/3dspaint_drawing_%08d.bmp", timestamp);
 			if (saveDrawing(file))
 				paddle1R = 0;
 			else
