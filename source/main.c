@@ -5,6 +5,7 @@
 #include <malloc.h>
 #include "main.h"
 #include "app.h"
+#include "draw.h"
 #include "input.h"
 #include "rendering.h"
 #include "mem.h"
@@ -64,6 +65,12 @@ int main()
 
 			count = 1;
 			save = 0;
+
+			//Visual confirmation that the drawings has been saved
+			drawFillRect(257, 138, 400, 168, 255, 255, 51, screenTopLeft);
+			drawFillRect(257, 138, 400, 168, 255, 255, 51, screenTopRight);
+
+			rendered = 0; //Redraw the GUI
 		}
 
 		if (count)
