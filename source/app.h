@@ -11,6 +11,7 @@ extern int debug;
 extern int warn;
 extern int save;
 extern int rendered;
+extern int sound;
 
 
 #endif

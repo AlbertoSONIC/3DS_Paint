@@ -18,6 +18,7 @@ int state = 0;
 int mode = 0;
 int save = 0;
 int rendered = 0; //Performance Improvements
+int sound = 0;
 
 //Debug mode, ON or OFF:
 int debug = 0;
@@ -133,8 +134,16 @@ void app()
 			}
 
 			//Changes color/Eraser)
-			if (input & KEY_LEFT && warn == 0 && color > 0) color--;
-			if (input & KEY_RIGHT && warn == 0 && color < 7) color++;
+			if (input & KEY_LEFT && warn == 0 && color > 0)
+			{
+				color--;
+				sound = 1;
+			}
+			if (input & KEY_RIGHT && warn == 0 && color < 7) 
+			{
+				color++;
+				sound = 1;
+			}
 
 			//Press DOWN to go back to app menu
 			if (input & KEY_DOWN && warn == 0)
@@ -377,18 +386,18 @@ void printGUI()
 		//DEBUG - ONLY IF debug==1
 		if (debug == 1)
 		{
-			drawFillRect(79, 163, 264, 239, 0, 0, 0, screenTopLeft);
-			drawFillRect(79, 163, 264, 239, 0, 0, 0, screenTopRight);
+			drawFillRect(79, 163, 250, 239, 0, 0, 0, screenTopLeft);
+			drawFillRect(79, 163, 250, 239, 0, 0, 0, screenTopRight);
 
-			sprintf(buffer, "mode= %d      state= %d", mode, state);
+			sprintf(buffer, "mode= %d     state= %d", mode, state);
 			drawString(buffer, 85, 171, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 171, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-			sprintf(buffer, "color= %d     debug= %d", color, debug);
+			sprintf(buffer, "color= %d    debug= %d", color, debug);
 			drawString(buffer, 85, 181, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 181, 255, 255, 255, screenTopRight, GFX_LEFT);
 
-			sprintf(buffer, "FPS= %d       warn= %d", printFPS, warn);
+			sprintf(buffer, "FPS= %d      warn= %d", printFPS, warn);
 			drawString(buffer, 85, 191, 255, 255, 255, screenTopLeft, GFX_LEFT);
 			drawString(buffer, 85, 191, 255, 255, 255, screenTopRight, GFX_LEFT);
 
