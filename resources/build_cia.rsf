@@ -11,7 +11,7 @@ Rom:
 
 
 TitleInfo:
-  UniqueId                : 0xf0025 # This was/is the first real homebrew app. I hope this TID range is not used by any retail game/app.
+  UniqueId                : 0xf0024 # This was/is the first real homebrew app. I hope this TID range is not used by any retail game/app.
   Category                : Application # Application / SystemApplication / Applet / Firmware / Base / DlpChild / Demo / Contents / SystemContents / SharedContents / AddOnContents / Patch / AutoUpdateContents
 
 CardInfo:
