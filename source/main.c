@@ -31,8 +31,8 @@ int main()
 	if (CSND_initialize(NULL) == 0) GW_MODE = false;
 	else GW_MODE = true;
 
-    u8 *POP = linearAlloc(POP_bin_size);
-    memcpy(POP, POP_bin, POP_bin_size);
+   u8 *POP = linearAlloc(POP_bin_size);
+   memcpy(POP, POP_bin, POP_bin_size);
 
 	// Main loop
 	while (aptMainLoop())
@@ -74,12 +74,6 @@ int main()
 
 			count = 1;
 			save = 0;
-
-			//Visual confirmation that the drawings has been saved
-			drawFillRect(257, 138, 400, 168, 255, 255, 51, screenTopLeft);
-			drawFillRect(257, 138, 400, 168, 255, 255, 51, screenTopRight);
-
-			rendered = 0; //Redraw the GUI
 			sound = 1;
 		}
 
@@ -100,7 +94,7 @@ int main()
 			CSND_playsound(0x8, CSND_LOOP_ENABLE, CSND_ENCODING_PCM16, 44100, (u32*)POP, NULL, POP_bin_size, 2, 0);
 			sound = 0;
 		}
-			
+		
 		// Flush and swap framebuffers
 		gfxFlushBuffers();
 		gfxSwapBuffers();

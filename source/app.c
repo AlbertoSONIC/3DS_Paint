@@ -8,12 +8,13 @@
 #include "rendering.h"
 #include "gui.h"
 
-//STATE: 0=start/reset MODE: 0=menu, 1=paint, 2=about, 3=debug
+//Vars
 int state = 0;
 int mode = 0;
 int save = 0;
 int rendered = 0; //Performance Improvements
 int sound = 0;
+u8 batteryLevel = 5;
 
 //Popups
 bool exitPopup = false;
@@ -160,7 +161,7 @@ void app()
 		}
 
 		//Press DOWN to go back to app menu
-		if (input & KEY_DOWN && clearPopup == false && closePopup == false && savePopup==false)	closePopup == true;
+		if (input & KEY_DOWN && closePopup == false && clearPopup == false && savePopup == false) closePopup = true;
 
 		//Press UP to show it up!
 		if (input & KEY_UP && closePopup == false && clearPopup == false && savePopup == false) clearPopup = true;
@@ -178,6 +179,7 @@ void app()
 			variableReset();
 			rendered = 0;
 		}
+
 		//If you tap No
 		if ((((posX >= 167 && posX <= 257) && (posY >= 151 && posY <= 179)) || input & KEY_B) && (closePopup == true || clearPopup == true))
 		{
@@ -232,5 +234,5 @@ void printGUI()
 	else if (closePopup) guiPopup("EXIT", "Are you sure that you want to exit?", " ", " ", "Yes (A)", "No (B)", false);
 
 	//Debug
-	if (debug) guiDebug(mode, state, color, rendered, printFPS, posX, posY);
+	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY);
 }

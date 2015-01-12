@@ -214,8 +214,16 @@ void guiPopup(char* title, char* line1, char* line2, char* line3, char* button1,
 	}	
 }
 
-void guiDebug(int mode, int state, int color, int rendered, int printFPS, int posX, int posY)
+void guiDebug(int mode, int state, int color, int rendered, int sound, int printFPS, int posX, int posY)
 {
 	//Todo
 	drawFillRect(79, 163, 250, 239, 0, 0, 0, screenTopLeft);
+	sprintf(buffer, "mode = %d                      state = %d", mode, state);
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 250 - fontDefault.height * 12);
+	sprintf(buffer, "color = %d                rendered = %d", color, rendered);
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 250 - fontDefault.height * 13);
+	sprintf(buffer, "sound = %d                     FPS = %d", sound, printFPS);
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 250 - fontDefault.height * 14);
+	sprintf(buffer, "TouchX = %d          Touch = %d", posX, posY);
+	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 85, 240 - fontDefault.height * 15);
 }
