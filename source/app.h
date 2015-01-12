@@ -6,10 +6,8 @@ void printGUI();
 void variableReset();
 
 extern int mode;
-extern int printFPS;
-extern int debug;
-extern int warn;
 extern int save;
+extern int printFPS;
 extern int rendered;
 extern int sound;
 
