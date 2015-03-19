@@ -2,7 +2,7 @@ BasicInfo:
   Title                   : "CtrApp"
   CompanyCode             : "00"
   ProductCode             : "CTR-P-CTAP"
-  ContentType             : Application
+  ContentType             : Application # Application / SystemUpdate / Manual / Child / Trial
   Logo                    : Nintendo # Nintendo / Licensed / Distributed / iQue / iQueForSystem
 
 Rom:
@@ -11,18 +11,18 @@ Rom:
 
 
 TitleInfo:
-  UniqueId                : 0x1344
-  Category                : Application
+  UniqueId                : 0x1334 # This was/is the first real homebrew app. I hope this TID range is not used by any retail game/app.
+  Category                : Application # Application / SystemApplication / Applet / Firmware / Base / DlpChild / Demo / Contents / SystemContents / SharedContents / AddOnContents / Patch / AutoUpdateContents
   
 CardInfo:
   MediaSize               : 128MB # 128MB / 256MB / 512MB / 1GB / 2GB / 4GB
-  MediaType               : Card2 # Card1 / Card2
-  CardDevice              : None # NorFlash(Pick this if you use savedata) / None
+  MediaType               : Card1 # Card1 / Card2
+  CardDevice              : NorFlash # NorFlash(Pick this if you use savedata) / None
   
 
 Option:
   FreeProductCode         : true # Removes limitations on ProductCode
-  MediaFootPadding        : true # If true CCI files are created with padding
+  MediaFootPadding        : false # If true CCI files are created with padding
   EnableCrypt             : true # Enables encryption for NCCH and CIA
   EnableCompress          : true # Compresses exefs code
 
