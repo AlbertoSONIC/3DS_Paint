@@ -240,5 +240,5 @@ void printGUI()
 	else if (closePopup) guiPopup("EXIT", "Are you sure that you want to exit?", " ", " ", "Yes (A)", "No (B)", false);
 
 	//Debug
-	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY,oldposX,oldposY);
+	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY);
 }
