@@ -128,40 +128,41 @@ void app()
 		//Saves the drawn dot into the drawing array
 		if ((posX >= 0 && posX <= 320) && (posY >= 34 && posY <= 240) && !closePopup && !clearPopup && !savePopup)
 		{
-                        if(oldposX != 0 && oldposY != 0 )
-                            smoothDrawing(posxy,posX,posY,oldposX,oldposY,color);
-			//Plus like dot
-			posxy[posX][posY] = color;
-			posxy[posX][posY - 1] = color;
-			posxy[posX][posY + 1] = color;
-			posxy[posX - 1][posY] = color;
-			posxy[posX + 1][posY] = color;
+			if (oldposX != 0 && oldposY != 0)
+				smoothDrawing(posxy, posX, posY, oldposX, oldposY, color);
 
-			//Square dot
-			posxy[posX - 1][posY - 1] = color;
-			posxy[posX + 1][posY + 1] = color;
-			posxy[posX + 1][posY - 1] = color;
-			posxy[posX - 1][posY + 1] = color;
+			if (color == 0) //Big dot if you are using the eraser
+			{
 
-			//Big dot
-			posxy[posX][posY - 2] = color;
-			posxy[posX][posY + 2] = color;
-			posxy[posX + 2][posY] = color;
-			posxy[posX - 2][posY] = color;
-                        
-                        
+				//Plus like dot
+				posxy[posX][posY] = color;
+				posxy[posX][posY - 1] = color;
+				posxy[posX][posY + 1] = color;
+				posxy[posX - 1][posY] = color;
+				posxy[posX + 1][posY] = color;
+
+				//Square dot
+				posxy[posX - 1][posY - 1] = color;
+				posxy[posX + 1][posY + 1] = color;
+				posxy[posX + 1][posY - 1] = color;
+				posxy[posX - 1][posY + 1] = color;
+
+				//Big dot
+				posxy[posX][posY - 2] = color;
+				posxy[posX][posY + 2] = color;
+				posxy[posX + 2][posY] = color;
+				posxy[posX - 2][posY] = color;
+			}
 		}
 
 		//Changes color/Eraser)
 		if (input & KEY_LEFT && color > 0)
 		{
 			color--;
-			sound = 1;
 		}
 		if (input & KEY_RIGHT && color < 7)
 		{
 			color++;
-			sound = 1;
 		}
 
 		//Press DOWN to go back to app menu

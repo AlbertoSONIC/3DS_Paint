@@ -9,7 +9,6 @@
 #include "input.h"
 #include "rendering.h"
 #include "mem.h"
-#include "POP_bin.h"
 
 //FPS Counter
 u64 tickOld;
@@ -26,13 +25,6 @@ int main()
 	fsInit();
 	sdmcArchive = (FS_archive){ 0x9, (FS_path){ PATH_EMPTY, 1, (u8*)"" } };
 	FSUSER_OpenArchive(NULL, &sdmcArchive);
-
-	// Check if user is in GW mode (for pop sound)
-	if (CSND_initialize(NULL) == 0) GW_MODE = false;
-	else GW_MODE = true;
-
-   u8 *POP = linearAlloc(POP_bin_size);
-   memcpy(POP, POP_bin, POP_bin_size);
 
 	// Main loop
 	while (aptMainLoop())
@@ -74,7 +66,6 @@ int main()
 
 			count = 1;
 			save = 0;
-			sound = 1;
 		}
 
 		if (count)
@@ -87,13 +78,6 @@ int main()
 			count = 0;
 			screenWait = 60 * 2;
 		}
-
-		//Plays pop sound if "sound"==1 and if CSND is initialized
-		if (sound == 1 && GW_MODE==false)
-		{
-			CSND_playsound(0x8, CSND_LOOP_ENABLE, CSND_ENCODING_PCM16, 44100, (u32*)POP, NULL, POP_bin_size, 2, 0);
-			sound = 0;
-		}
 		
 		// Flush and swap framebuffers
 		gfxFlushBuffers();
@@ -104,10 +88,6 @@ int main()
 
 		fps++;
 	}
-
-	if (GW_MODE == false) CSND_shutdown();
-
-	linearFree(POP);
 
 	// Exit services
 	gfxExit();
