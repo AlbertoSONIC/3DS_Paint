@@ -10,6 +10,8 @@
 u32 input;
 u16 posX;
 u16 posY;
+u16 oldposX;
+u16 oldposY;
 
 void getInput()
 {

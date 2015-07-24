@@ -10,6 +10,7 @@ void drawPixel(int x, int y, char r, char g, char b, u8* screen);
 void drawChar(char letter,int x,int y, char r, char g, char b, u8* screen);
 void drawString(u8* fb, font_s* f, char* str, s16 x, s16 y, u16 w, u16 h);
 void drawLine( int x1, int y1, int x2, int y2, char r, char g, char b, u8* screen);
+void smoothDrawing(int arrposxy[][240],int x0,int y0,int x1,int y1,int color );
 void drawRect( int x1, int y1, int x2, int y2, char r, char g, char b, u8* screen);
 void drawFillRect( int x1, int y1, int x2, int y2, char r, char g, char b, u8* screen);
 void drawCircle(int x, int y, int radius, char r, char g, char b, u8* screen);
