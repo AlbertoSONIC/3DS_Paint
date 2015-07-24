@@ -128,6 +128,8 @@ void app()
 		//Saves the drawn dot into the drawing array
 		if ((posX >= 0 && posX <= 320) && (posY >= 34 && posY <= 240) && !closePopup && !clearPopup && !savePopup)
 		{
+                        if(oldposX != 0 && oldposY != 0 )
+                            smoothDrawing(posxy,posX,posY,oldposX,oldposY,color);
 			//Plus like dot
 			posxy[posX][posY] = color;
 			posxy[posX][posY - 1] = color;
@@ -146,6 +148,8 @@ void app()
 			posxy[posX][posY + 2] = color;
 			posxy[posX + 2][posY] = color;
 			posxy[posX - 2][posY] = color;
+                        
+                        
 		}
 
 		//Changes color/Eraser)
@@ -196,6 +200,8 @@ void app()
 
 		//Save popup
 		if (savePopup && (((posX >= 107 && posX <= 198) && (posY >= 155 && posY <= 183)) || input & KEY_A)) savePopup = false;
+                oldposX=posX;
+                oldposY=posY;
 	}
 }
 
@@ -234,5 +240,5 @@ void printGUI()
 	else if (closePopup) guiPopup("EXIT", "Are you sure that you want to exit?", " ", " ", "Yes (A)", "No (B)", false);
 
 	//Debug
-	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY);
+	if (debug) guiDebug(mode, state, color, rendered, sound, printFPS, posX, posY,oldposX,oldposY);
 }
