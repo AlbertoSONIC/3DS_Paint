@@ -183,7 +183,7 @@ void guiClock()
 
 	u64 timeInSeconds = osGetTime() / 1000;
 	u64 dayTime = timeInSeconds % SECONDS_IN_DAY;
-	sprintf(buffer, "%llu:%llu:%llu", dayTime / SECONDS_IN_HOUR, (dayTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, dayTime % SECONDS_IN_MINUTE);
+	sprintf(buffer, "%.2llu:%.2llu:%.2llu", dayTime / SECONDS_IN_HOUR, (dayTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE, dayTime % SECONDS_IN_MINUTE);
 
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, buffer, 300, 248 - fontDefault.height * 14);
 }
