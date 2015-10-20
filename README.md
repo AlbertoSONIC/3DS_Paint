@@ -1,4 +1,4 @@
-3DS Paint      [![Build Status](http://build.filfatstudios.com:8080/buildStatus/icon?job=3DSPaint)](http://build.filfatstudios.com:8080/job/3DSPaint/)
+3DS Paint [![Build Status](https://travis-ci.org/AlbertoSONIC/3DS_Paint.svg?branch=master)](https://travis-ci.org/AlbertoSONIC/3DS_Paint)
 ==========
 
 Today i introduce you to my latest 3DS Homebrew: 3DS Paint! With this app you can draw anything you want, with 7 colors and a rubber! You can find some instructions on the 3DS's top screen!
